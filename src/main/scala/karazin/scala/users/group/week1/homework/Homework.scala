@@ -40,26 +40,78 @@ object Homework :
 
   object `Boolean Operators` :
 
-    def not(b: Boolean): Boolean = ???
+    def not(b: Boolean): Boolean =
+      if (b == true) false
+      else true
 
-    def and(left: Boolean, right: Boolean): Boolean = ???
+    def and(left: Boolean, right: Boolean): Boolean =
+      if (left == false) false
+      else if (right == false) false
+      else true
 
-    def or(left: Boolean, right: Boolean): Boolean = ???
+    def or(left: Boolean, right: Boolean): Boolean =
+      if(left == true) true
+      else if(right == true) true
+      else false
 
   end `Boolean Operators`
 
   object `Fermat Numbers` :
 
-    val multiplication: (BigInt, BigInt) => BigInt = ???
+    val multiplication: (BigInt, BigInt) => BigInt = (num1, num2) =>
+      def multiply(num1: BigInt, num2: BigInt, acc: BigInt) : BigInt =
+        if (num1 == 0 || num2 == 0)
+          acc
+        else if (num2 < 0)
+          multiply(num1, num2 + 1, acc - num1)
+        else
+          multiply(num1, num2 - 1, acc + num1)
+      multiply(num1, num2, 0)
 
-    val power: (BigInt, BigInt) => BigInt = ???
+    val power: (BigInt, BigInt) => BigInt = (num1, num2) =>
+      def calculatePower(num1: BigInt, num2: BigInt, acc: BigInt) : BigInt =
+        if (num2 > 0)
+          calculatePower(num1, num2 - 1, acc * num1)
+        else if (num2 < 0)
+          calculatePower(num1, -num2, 1 / acc)
+        else
+          acc
+      calculatePower(num1, num2, 1)
 
-    val fermatNumber: Int => BigInt = ???
+    val fermatNumber: Int => BigInt = (num) =>
+      if(num < 0)
+        0 
+      else 
+        power(2, power(2, num)) + 1
 
   end `Fermat Numbers`
 
   object `Look-and-say Sequence` :
-    val lookAndSaySequenceElement: Int => BigInt = ???
+
+    def toLookAndSay(n: BigInt): BigInt = {
+      val nList = n.toString.map(_.asDigit).toList
+
+      @tailrec
+      def inner(ints: List[Int], cur: BigInt, cnt: Int, acc: BigInt): BigInt = ints match {
+        case List() => (acc * 10 + cnt) * 10 + cur
+        case h :: t => {
+          if (h == cur) inner(t, cur, cnt + 1, acc)
+          else inner(t, h, 1, (acc * 10 + cnt) * 10 + cur)
+        }
+      }
+
+      inner(nList.tail, nList.head, 1, 0)
+    }
+
+    val lookAndSaySequenceElement: Int => BigInt = n => {
+      @tailrec
+      def loop(cur: BigInt, left: BigInt): BigInt = left match {
+        case 0 => cur
+        case _ => loop(toLookAndSay(cur), left - 1)
+      }
+
+      loop(1, n)
+    }
 
   end `Look-and-say Sequence`
 
